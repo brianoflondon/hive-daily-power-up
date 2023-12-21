@@ -3,5 +3,10 @@
         "activityBar.background": "#1a1033",
         "titleBar.activeBackground": "#1d1648",
         "titleBar.activeForeground": "#f4f4fbd6"
-    }
+    },
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

@@ -43,8 +43,7 @@ def power_up_month():
 
 
 def main():
-    print(f"Version: {__version__}")
-    print("Hello World")
+    print(f"Power Up Daily Version: {__version__}")
     power_up_month()
 
 
