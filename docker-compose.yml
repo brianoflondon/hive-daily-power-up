@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  powerup:
+    container_name: powerup
+    # image: powerup
+    build: ./
+    env_file:
+      - ".env"

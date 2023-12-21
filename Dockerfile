@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11.7
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
@@ -20,4 +20,4 @@ COPY ./src /app/
 
 ENV PATH="/home/hive_daily_power_up/app/.venv/bin:${PATH}"
 
-ENTRYPOINT [ "python", "./main.py" ]
+ENTRYPOINT [ "python", "hive_daily_power_up/main.py" ]
