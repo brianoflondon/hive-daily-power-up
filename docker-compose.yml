@@ -4,7 +4,8 @@ services:
 
   powerup:
     container_name: powerup
-    # image: powerup
+    image: brianoflondon/hive-daily-power-up
     build: ./
     env_file:
       - ".env"
+    restart:
