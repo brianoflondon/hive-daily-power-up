@@ -38,7 +38,7 @@ def power_up_month():
         logging.info("need to power up")
 
         hive_acc = Account(POWERUP_ACCOUNT, blockchain_instance=hive)
-        trx = hive_acc.transfer_to_vesting(amount=1)
+        trx = hive_acc.transfer_to_vesting(amount=POWERUP_AMOUNT)
         logging.info(trx["trx_id"])
         return trx["trx_id"]
     logging.info("no need to power up")
@@ -68,6 +68,5 @@ if __name__ == "__main__":
         level=logging.INFO,
         format="%(asctime)s %(levelname)-8s %(module)-14s %(lineno) 5d : %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S%z",
-        # datefmt="%Y-%m-%dT%H:%M:%S,uuu",
     )
     main()
