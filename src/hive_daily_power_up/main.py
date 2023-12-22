@@ -12,41 +12,51 @@ __version__ = get_version(__name__, "", default_return="0.0.1")
 
 load_dotenv()
 
-POWERUP_ACCOUNT = os.getenv("POWERUP_ACCOUNT")
-POWERUP_POSTING_KEY = os.getenv("POWERUP_POSTING_KEY")
-POWERUP_ACTIVE_KEY = os.getenv("POWERUP_ACTIVE_KEY")
-POWERUP_AMOUNT = os.getenv("POWERUP_AMOUNT")
+POWERUP_ACCOUNTS = os.getenv("POWERUP_ACCOUNTS", "").split(",")
+POWERUP_ACTIVE_KEYS = os.getenv("POWERUP_ACTIVE_KEYS", "").split(",")
+POWERUP_AMOUNTS = os.getenv("POWERUP_AMOUNTS", "").split(",")
 
 
 def power_up_month():
     """Check for last power up and power up if it is a new day."""
-    hive = Hive(account=POWERUP_ACCOUNT, keys=[POWERUP_ACTIVE_KEY], nobroadcast=False)
-    hive_acc = Account(POWERUP_ACCOUNT, blockchain_instance=hive)
-    today = datetime.utcnow()
 
-    power_up_days = []
-    for item in hive_acc.history(
-        start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
-    ):
-        last_powerup = datetime.strptime(item["timestamp"], "%Y-%m-%dT%H:%M:%S")
-        logging.info(f"{last_powerup=}")
-        if today.month == last_powerup.month:
-            power_up_days.append(last_powerup.day)
+    for powerup_account in POWERUP_ACCOUNTS:
+        powerup_active_key = POWERUP_ACTIVE_KEYS[
+            POWERUP_ACCOUNTS.index(powerup_account)
+        ]
+        powerup_amount = POWERUP_AMOUNTS[POWERUP_ACCOUNTS.index(powerup_account)]
+        logging.info(f"Checking {powerup_account} to power up {powerup_amount}HP")
+        hive = Hive(
+            account=powerup_account, keys=[powerup_active_key], nobroadcast=False
+        )
+        hive_acc = Account(powerup_account, blockchain_instance=hive)
+        today = datetime.utcnow()
 
-    logging.info(f"{power_up_days=}")
-    if today.day not in power_up_days:
-        logging.info("need to power up")
+        power_up_days = []
+        for item in hive_acc.history(
+            start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
+        ):
+            last_powerup = datetime.strptime(item["timestamp"], "%Y-%m-%dT%H:%M:%S")
+            logging.debug(f"{last_powerup=}")
+            if today.month == last_powerup.month:
+                power_up_days.append(last_powerup.day)
 
-        hive_acc = Account(POWERUP_ACCOUNT, blockchain_instance=hive)
-        trx = hive_acc.transfer_to_vesting(amount=POWERUP_AMOUNT)
-        logging.info(trx["trx_id"])
-        return trx["trx_id"]
-    logging.info("no need to power up")
+        logging.info(f"{power_up_days=}")
+        if today.day not in power_up_days:
+            try:
+                logging.info("need to power up")
+                hive_acc = Account(powerup_account, blockchain_instance=hive)
+                trx = hive_acc.transfer_to_vesting(amount=powerup_amount)
+                logging.info(trx["trx_id"])
+            except Exception as error:
+                logging.error(error)
+        else:
+            logging.info("no need to power up")
 
 
 def main():
     print(f"Power Up Daily Version: {__version__}")
-    if not POWERUP_ACCOUNT:
+    if not POWERUP_ACCOUNTS:
         logging.error("POWERUP_ACCOUNT not set")
         return
     try:
