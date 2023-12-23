@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta
 from time import sleep
 
+import pytz
 from beem import Hive  # type: ignore
 from beem.account import Account  # type: ignore
 from dotenv import load_dotenv
@@ -30,7 +31,8 @@ def power_up_month():
             account=powerup_account, keys=[powerup_active_key], nobroadcast=False
         )
         hive_acc = Account(powerup_account, blockchain_instance=hive)
-        today = datetime.utcnow()
+
+        today = datetime.now(pytz.utc)
 
         power_up_days = []
         for item in hive_acc.history(
