@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timedelta
 from time import sleep
 
-import pytz
+import pytz  # type: ignore
 from beem import Hive  # type: ignore
 from beem.account import Account  # type: ignore
 from dotenv import load_dotenv
