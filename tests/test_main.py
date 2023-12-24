@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from v4vapp_binance.binance import get_client
 
 import pytest
 
@@ -29,3 +30,11 @@ def test_your_function(mock_history, mock_transfer_to_vesting):
     # mock_transfer_to_vesting.assert_called_once()
     # mock_history.assert_called_once()
     # Add more assertions based on what your function is supposed to do
+
+
+def test_binance():
+    client = get_client()
+    assert client
+    # Arrange
+    # Act
+    # Assert

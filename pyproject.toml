@@ -11,6 +11,7 @@ python = "^3.11"
 single-source = "^0.3.0"
 beem = {git = "https://github.com/brianoflondon/beem.git"}
 python-dotenv = "^1.0.0"
+v4vapp-binance = { git = "git@github.com:brianoflondon/v4vapp-binance.git", branch = "develop" }
 
 
 [tool.poetry.group.dev.dependencies]
