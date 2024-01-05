@@ -18,7 +18,7 @@ POWERUP_ACTIVE_KEYS = os.getenv("POWERUP_ACTIVE_KEYS", "").split(",")
 POWERUP_AMOUNTS = os.getenv("POWERUP_AMOUNTS", "").split(",")
 
 
-def power_up_month():
+def power_up_month() -> None:
     """Check for last power up and power up if it is a new day."""
 
     for powerup_account in POWERUP_ACCOUNTS:
