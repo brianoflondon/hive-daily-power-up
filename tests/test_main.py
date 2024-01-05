@@ -1,10 +1,6 @@
 from unittest.mock import patch
 
-import pytest
-
-from hive_daily_power_up.main import (
-    power_up_month,
-)  # replace with your actual module and function
+from hive_daily_power_up.main import power_up_month
 
 
 @patch("beem.account.Account.transfer_to_vesting")
