@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hive-daily-power-up"
-version = "1.1.1"
+version = "1.2.0"
 description = "Daily power up a Hive account"
 authors = ["Brian of London (home imac) <brian@v4v.app>"]
 license = "MIT"
@@ -11,6 +11,8 @@ python = "^3.11"
 single-source = "^0.3.0"
 beem = {git = "https://github.com/brianoflondon/beem.git"}
 python-dotenv = "^1.0.0"
+colorlog = "^6.8.0"
+termcolor = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]

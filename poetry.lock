@@ -250,6 +250,23 @@ files = [
 ]
 
 [[package]]
+name = "colorlog"
+version = "6.8.0"
+description = "Add colours to the output of Python's logging module."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "colorlog-6.8.0-py3-none-any.whl", hash = "sha256:4ed23b05a1154294ac99f511fabe8c1d6d4364ec1f7fc989c7fb515ccc29d375"},
+    {file = "colorlog-6.8.0.tar.gz", hash = "sha256:fbb6fdf9d5685f2517f388fb29bb27d54e8654dd31f58bc2a3b217e967a95ca6"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+development = ["black", "flake8", "mypy", "pytest", "types-colorama"]
+
+[[package]]
 name = "diff-match-patch"
 version = "20230430"
 description = "Diff Match and Patch"
@@ -637,6 +654,20 @@ files = [
 ]
 
 [[package]]
+name = "termcolor"
+version = "2.4.0"
+description = "ANSI color formatting for output in terminal"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "termcolor-2.4.0-py3-none-any.whl", hash = "sha256:9297c0df9c99445c2412e832e882a7884038a25617c60cea2ad69488d4040d63"},
+    {file = "termcolor-2.4.0.tar.gz", hash = "sha256:aab9e56047c8ac41ed798fa36d892a37aca6b3e9159f3e0c24bc64a9b3ac7b7a"},
+]
+
+[package.extras]
+tests = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "urllib3"
 version = "2.1.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -682,4 +713,4 @@ test = ["websockets"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5101a549b52baae752e735ea7a9171905abb9d129c8e08a46744e5192171b8a8"
+content-hash = "508e80e867a5aed3d260192835277d775674d5f7669a26f063d1027d3d36d3b5"

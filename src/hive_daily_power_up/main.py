@@ -3,11 +3,13 @@ import os
 from datetime import datetime, timedelta
 from time import sleep
 
+import colorlog
 import pytz  # type: ignore
 from beem import Hive  # type: ignore
 from beem.account import Account  # type: ignore
 from dotenv import load_dotenv
 from single_source import get_version
+from termcolor import colored
 
 __version__ = get_version(__name__, "", default_return="0.0.1")
 
@@ -26,7 +28,8 @@ def power_up_month() -> None:
             POWERUP_ACCOUNTS.index(powerup_account)
         ]
         powerup_amount = POWERUP_AMOUNTS[POWERUP_ACCOUNTS.index(powerup_account)]
-        logging.info(f"Checking {powerup_account} to power up {powerup_amount}HP")
+        message = colored(f"{powerup_account}", "white", attrs=["bold"])
+        logging.info(f"Checking {message} to power up {powerup_amount}HP")
         hive = Hive(
             account=powerup_account, keys=[powerup_active_key], nobroadcast=False
         )
@@ -46,7 +49,7 @@ def power_up_month() -> None:
         logging.info(f"{power_up_days=}")
         if today.day not in power_up_days:
             try:
-                logging.info("need to power up")
+                logging.info(colored("need to power up", "white", attrs=["bold"]))
                 hive_acc = Account(powerup_account, blockchain_instance=hive)
                 trx = hive_acc.transfer_to_vesting(amount=powerup_amount)
                 logging.info(trx["trx_id"])
@@ -57,7 +60,7 @@ def power_up_month() -> None:
 
 
 def main():
-    print(f"Power Up Daily Version: {__version__}")
+    logging.info(f"Power Up Daily Version: {__version__}")
     if not POWERUP_ACCOUNTS:
         logging.error("POWERUP_ACCOUNT not set")
         return
@@ -76,9 +79,22 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)-8s %(module)-14s %(lineno) 5d : %(message)s",
-        datefmt="%Y-%m-%dT%H:%M:%S%z",
+    handler = colorlog.StreamHandler()
+    handler.setFormatter(
+        colorlog.ColoredFormatter(
+            "%(log_color)s%(asctime)s %(levelname)-8s %(module)-8s %(lineno) 4d : %(message)s",
+            datefmt="%Y-%m-%dT%H:%M:%S%z",
+            log_colors={
+                "DEBUG": "cyan",
+                "INFO": "blue",  # change this to the color you want
+                "WARNING": "yellow",
+                "ERROR": "red",
+                "CRITICAL": "red,bg_white",
+            },
+        )
     )
+
+    logger = colorlog.getLogger()
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
     main()
