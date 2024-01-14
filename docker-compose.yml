@@ -4,7 +4,7 @@ services:
 
   powerup:
     container_name: powerup
-    image: brianoflondon/hive-daily-power-up
+    image: brianoflondon/hive-daily-power-up:1.3.1
     env_file:
       - ".env"
     environment:
