@@ -19,44 +19,71 @@ POWERUP_ACCOUNTS = os.getenv("POWERUP_ACCOUNTS", "").split(",")
 POWERUP_ACTIVE_KEYS = os.getenv("POWERUP_ACTIVE_KEYS", "").split(",")
 POWERUP_AMOUNTS = os.getenv("POWERUP_AMOUNTS", "").split(",")
 
+nodes = [
+    "https://api.hive.blog",
+    "https://api.deathwing.me",
+    "https://api.hivekings.com",
+    "https://anyx.io",
+    "https://api.openhive.network",
+]
+
+bad_nodes = []
+
 
 def power_up_month() -> None:
     """Check for last power up and power up if it is a new day."""
-
-    for powerup_account in POWERUP_ACCOUNTS:
-        powerup_active_key = POWERUP_ACTIVE_KEYS[
-            POWERUP_ACCOUNTS.index(powerup_account)
-        ]
-        powerup_amount = POWERUP_AMOUNTS[POWERUP_ACCOUNTS.index(powerup_account)]
-        message = colored(f"{powerup_account}", "white", attrs=["bold"])
-        logging.info(f"Checking {message} to power up {powerup_amount}HP")
-        hive = Hive(
-            account=powerup_account, keys=[powerup_active_key], nobroadcast=False
-        )
-        hive_acc = Account(powerup_account, blockchain_instance=hive)
-
-        today = datetime.now(pytz.utc)
-
-        power_up_days = []
-        for item in hive_acc.history(
-            start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
-        ):
-            last_powerup = datetime.strptime(item["timestamp"], "%Y-%m-%dT%H:%M:%S")
-            logging.debug(f"{last_powerup=}")
-            if today.month == last_powerup.month:
-                power_up_days.append(last_powerup.day)
-
-        logging.info(f"{power_up_days=}")
-        if today.day not in power_up_days:
-            try:
-                logging.info(colored("need to power up", "white", attrs=["bold"]))
+    success = False
+    while not success:
+        try:
+            for powerup_account in POWERUP_ACCOUNTS:
+                powerup_active_key = POWERUP_ACTIVE_KEYS[
+                    POWERUP_ACCOUNTS.index(powerup_account)
+                ]
+                powerup_amount = POWERUP_AMOUNTS[
+                    POWERUP_ACCOUNTS.index(powerup_account)
+                ]
+                message = colored(f"{powerup_account}", "white", attrs=["bold"])
+                logging.info(f"Checking {message} to power up {powerup_amount}HP")
+                hive = Hive(
+                    node=[node for node in nodes if node not in bad_nodes],
+                    account=powerup_account,
+                    keys=[powerup_active_key],
+                    nobroadcast=False,
+                )
                 hive_acc = Account(powerup_account, blockchain_instance=hive)
-                trx = hive_acc.transfer_to_vesting(amount=powerup_amount)
-                logging.info(trx["trx_id"])
-            except Exception as error:
-                logging.error(error)
-        else:
-            logging.info("no need to power up")
+
+                today = datetime.now(pytz.utc)
+
+                power_up_days = []
+
+                for item in hive_acc.history(
+                    start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
+                ):
+                    last_powerup = datetime.strptime(
+                        item["timestamp"], "%Y-%m-%dT%H:%M:%S"
+                    )
+                    logging.debug(f"{last_powerup=}")
+                    if today.month == last_powerup.month:
+                        power_up_days.append(last_powerup.day)
+
+                logging.info(f"{power_up_days=}")
+                if today.day not in power_up_days:
+                    try:
+                        logging.info(
+                            colored("need to power up", "white", attrs=["bold"])
+                        )
+                        hive_acc = Account(powerup_account, blockchain_instance=hive)
+                        trx = hive_acc.transfer_to_vesting(amount=powerup_amount)
+                        logging.info(trx["trx_id"])
+                    except Exception as error:
+                        logging.error(error)
+                else:
+                    logging.info("no need to power up")
+                success = True
+        except Exception as error:
+            bad_nodes.append(hive.rpc.url)
+            logging.error(f"Bad node: {hive.rpc.url}")
+            logging.error(error)
 
 
 def main():
