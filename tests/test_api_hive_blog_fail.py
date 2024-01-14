@@ -20,6 +20,7 @@ def test_api_hive_blog_fail() -> None:
         print(error)
         assert True
 
+def test_deathwing_fail() -> None:
     try:
         hive = Hive(node=["https://api.deathwing.me"], nobroadcast=True)
         today = datetime.now(pytz.utc)
@@ -31,4 +32,4 @@ def test_api_hive_blog_fail() -> None:
             print(item)
     except Exception as error:
         print(error)
-        assert True
+        assert False
