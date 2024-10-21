@@ -95,8 +95,8 @@ def main():
         while True:
             logging.info("Starting main loop")
             power_up_month()
-            logging.info("Sleeping for 8 hours")
-            sleep(8 * 60 * 60)
+            logging.info("Sleeping for 4 hours")
+            sleep(4 * 60 * 60)
     except KeyboardInterrupt:
         logging.info("Keyboard interrupt")
         exit()
