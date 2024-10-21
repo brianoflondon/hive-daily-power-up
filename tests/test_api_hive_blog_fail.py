@@ -13,12 +13,15 @@ def test_api_hive_blog_fail() -> None:
 
         hive_acc = Account("brianoflondon", blockchain_instance=hive)
         for item in hive_acc.history(
-            start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
+            start=today - timedelta(days=33),
+            only_ops=["transfer_to_vesting"],
+            batch_size=10,
         ):
             print(item)
     except Exception as error:
         print(error)
-        assert True
+        assert False
+
 
 def test_deathwing_fail() -> None:
     try:
@@ -27,7 +30,9 @@ def test_deathwing_fail() -> None:
 
         hive_acc = Account("brianoflondon", blockchain_instance=hive)
         for item in hive_acc.history(
-            start=today - timedelta(days=33), only_ops=["transfer_to_vesting"]
+            start=today - timedelta(days=33),
+            only_ops=["transfer_to_vesting"],
+            batch_size=10,
         ):
             print(item)
     except Exception as error:
